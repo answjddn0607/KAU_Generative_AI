@@ -1,0 +1,11 @@
+pydantic>=2
+requests
+
+# 건수 - LangGraph 관련
+langgraph
+langchain-core
+langchain-openai
+
+# Vector DB
+chromadb
+sentence-transformers
