@@ -77,6 +77,9 @@ def run_with_stream(user_input: str, session_id: str = "default"):
     }
     
     print("🚀 Agent 시작 (Stream Mode)...\n")
+
+    logs = "🚀 **Agent 시작** (LangGraph Running...)\n"
+    yield logs
     
     for event in graph.stream(initial_state, config, stream_mode="updates"):
         for node_name, node_output in event.items():
@@ -93,9 +96,12 @@ def run_with_stream(user_input: str, session_id: str = "default"):
                     if hasattr(last_msg, 'tool_calls') and last_msg.tool_calls:
                         tool_calls = last_msg.tool_calls
                         print(f"  🔧 Tool Call ({len(tool_calls)}개):")
+                        logs += f"  🛠️ **Tool Call** ({len(tool_calls)}개):\n"
                         for tc in tool_calls:
                             # LangGraph 형식의 tool_call
                             print(f"    - {tc['name']}")
+                            logs += f"    - `{tc['name']}`\n"
+                        yield logs
                     elif hasattr(last_msg, 'content') and last_msg.content:
                         preview = last_msg.content[:100]
                         print(f"  💬 Response: {preview}...")
@@ -103,11 +109,18 @@ def run_with_stream(user_input: str, session_id: str = "default"):
             elif node_name == "tools":
                 messages = node_output.get("messages", [])
                 print(f"  📊 Tool 결과: {len(messages)}개")
+                logs += f"  📊 **Tool 결과**: {len(messages)}개 수신 완료\n"
+                yield logs
             
             print("-" * 50)
+            logs += "---\n"
+            yield logs
     
     final_state = graph.get_state(config)
     final_msg = final_state.values["messages"][-1]
+    answer = final_msg.content if hasattr(final_msg, 'content') else "답변을 생성하지 못했습니다."
     
     # 메시지 객체에서 content 추출
+    full_response = logs + "\n\n✅ **최종 답변:**\n\n" + answer
+    yield full_response
     return final_msg.content if hasattr(final_msg, 'content') else ""
