@@ -1,4 +1,5 @@
 key.env
+.env
 
 *.pyc
-chroma_db/
+chroma_db/ 

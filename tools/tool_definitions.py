@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime
 
 from .chroma_client import get_memory_collection, get_rag_collection
-
+from .reranker import rerank_results
 
 
 # -------------------------------
@@ -17,6 +17,35 @@ class ToolSpec(BaseModel):
     description: str
     input_model: Type[BaseModel]                  # Pydantic 모델 타입
     handler: Callable[[BaseModel], Dict[str, Any]]
+
+# -------------------------------
+# 0. 기본 툴
+#   calculator, 날씨 API
+# -------------------------------
+
+class CalculatorInput(BaseModel):
+    a: float = Field(..., description="First operand")
+    op: str = Field(..., pattern=r"^[+\-*/]$", description="Operator: +, -, *, /")
+    b: float = Field(..., description="Second operand")
+
+def calculator(input: CalculatorInput) -> Dict[str, Any]:
+    if input.op == '+':
+        val = input.a + input.b
+    elif input.op == '-':
+        val = input.a - input.b
+    elif input.op == '*':
+        val = input.a * input.b
+    elif input.op == '/':
+        if input.b == 0:
+            raise RuntimeError("Division by zero")
+        val = input.a / input.b
+    else:
+        raise RuntimeError(f"Unsupported operator: {input.op}")
+    return {"expression": f"{input.a} {input.op} {input.b}", "value": val}
+
+class GetWeatherInput(BaseModel):
+    city: str = Field(..., description="City name in English, e.g., 'Seoul', 'Busan', 'Tokyo'")
+    unit: str = Field(default="C", description="Temperature unit 'C' or 'F'")
 
 
 # -------------------------------
@@ -237,11 +266,15 @@ class RAGSearchInput(BaseModel):
 
 
 def rag_search_handler(args: RAGSearchInput) -> Dict[str, Any]:
+    
     collection = get_rag_collection()
+    
+    # 초기 검색: top_k의 2배 가져오기
+    initial_k = min(args.top_k * 2, 20)
     
     results = collection.query(
         query_texts=[args.query],
-        n_results=args.top_k
+        n_results=initial_k
     )
     
     papers = []
@@ -249,6 +282,7 @@ def rag_search_handler(args: RAGSearchInput) -> Dict[str, Any]:
         for i, doc in enumerate(results["documents"][0]):
             paper = {
                 "abstract": doc,
+                "text": doc,  # ← 이 줄 추가
                 "id": results["ids"][0][i] if results["ids"] else None,
             }
             
@@ -264,10 +298,26 @@ def rag_search_handler(args: RAGSearchInput) -> Dict[str, Any]:
             
             papers.append(paper)
     
+    # 유사도 임계값 0.5
+    if not papers or min(p.get("distance", 1.0) for p in papers) > 0.5:
+        return {
+            "query": args.query,
+            "results": [],
+            "count": 0,
+            "reranked": False,
+            "reason": "신뢰도 낮음"
+        }
+    
+    # Cross-Encoder 리랭킹
+    papers = rerank_results(args.query, papers, top_k=args.top_k)
+    
+    for paper in papers:
+        paper.pop('text', None)
     return {
         "query": args.query,
         "results": papers,
-        "count": len(papers)
+        "count": len(papers),
+        "reranked": True
     }
 
 # -------------------------------
@@ -341,3 +391,29 @@ def semantic_scholar_search_handler(args: SemanticScholarSearchInput) -> Dict[st
 
     except requests.exceptions.RequestException as e:
         return {"error": "API_REQUEST_FAILED", "detail": str(e)}
+    
+# -------------------------------
+# 5. 서브 그래프 
+#    서브그래프 툴 설명
+# -------------------------------
+    
+class PaperSearchToolInput(BaseModel):
+    query: str = Field(..., description="검색할 논문 키워드나 주제")
+
+def paper_search_placeholder(args: PaperSearchToolInput) -> Dict[str, Any]:
+    """실제로 호출 안 됨 - 서브그래프 노드에서 처리"""
+    return {}
+
+class PaperAnalysisToolInput(BaseModel):
+    query: str = Field(..., description="분석할 논문 제목이나 키워드")
+
+def paper_analysis_placeholder(args: PaperAnalysisToolInput) -> Dict[str, Any]:
+    """실제로 호출 안 됨 - 서브그래프 노드에서 처리"""
+    return {}
+
+class RecommendationToolInput(BaseModel):
+    query: str = Field("AI research", description="관심 분야")
+    
+def recommendation_placeholder(args: RecommendationToolInput) -> Dict[str, Any]:
+    """실제로 호출 안 됨 - 서브그래프 노드에서 처리"""
+    return {}

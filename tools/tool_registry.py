@@ -3,6 +3,11 @@ from pydantic import ValidationError
 
 from .tool_definitions import (
     ToolSpec,
+    # claculator
+    CalculatorInput,
+    calculator,
+    # wether
+    
     # Google Search
     GoogleSearchInput,
     google_search_handler,
@@ -19,6 +24,15 @@ from .tool_definitions import (
     # Semantic Scholar
     SemanticScholarSearchInput,
     semantic_scholar_search_handler,
+    # PaperSearch Subgraph
+    PaperSearchToolInput,
+    PaperAnalysisToolInput,
+    # Recommendataion Subgraph
+    RecommendationToolInput,
+    paper_search_placeholder,
+    # Paper Analysis Subgraph
+    paper_analysis_placeholder,
+    recommendation_placeholder,
 )
 
 
@@ -73,6 +87,16 @@ def register_all_tools(registry: ToolRegistry) -> None:
     모든 툴 등록
     새로운 툴 추가 시 여기에 추가
     """
+    #0. Calculator
+    registry.register_tool(
+        ToolSpec(
+            name="calculator",
+            description="단순 사칙연산 계산기",
+            input_model=CalculatorInput,
+            handler=calculator,
+        )
+    )
+
     # 1. Google Search
     registry.register_tool(
         ToolSpec(
@@ -130,5 +154,35 @@ def register_all_tools(registry: ToolRegistry) -> None:
             description="Semantic Scholar API를 통해 학술 논문을 검색합니다. 최신 연구나 특정 주제의 논문을 찾을 때 사용합니다.",
             input_model=SemanticScholarSearchInput,
             handler=semantic_scholar_search_handler,
+        )
+    )
+    
+    # 7. Paper Search (서브그래프)
+    registry.register_tool(
+        ToolSpec(
+            name="paper_search",
+            description="논문 검색. RAG → API → Google 순서로 검색. 논문 찾을 때 사용.",
+            input_model=PaperSearchToolInput,
+            handler=paper_search_placeholder,
+        )
+    )
+
+    # 8. Paper Analysis (서브그래프)
+    registry.register_tool(
+        ToolSpec(
+            name="paper_analysis",
+            description="논문 분석. '분석', '분석해줘', '자세히 알려줘' 등의 요청에 사용. 논문 상세 정보 + 관련 논문 제공.",
+            input_model=PaperAnalysisToolInput,
+            handler=paper_analysis_placeholder,
+        )
+    )
+
+    # 9. Paper Recommendation (서브그래프)
+    registry.register_tool(
+        ToolSpec(
+            name="paper_recommendation",
+            description="논문 추천. 사용자 관심사 기반 논문 추천.",
+            input_model=RecommendationToolInput,
+            handler=recommendation_placeholder,
         )
     )

@@ -1,6 +1,6 @@
 import json
 from openai import OpenAI
-from prompts.memory_prompt import MEMORY_EXTRACTOR_PROMPT
+from prompts.memory_extractor_prompt import MEMORY_EXTRACTOR_PROMPT
 
 client = OpenAI()
 

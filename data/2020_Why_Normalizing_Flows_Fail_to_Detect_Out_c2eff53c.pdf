@@ -1,0 +1,74 @@
+%PDF-1.3
+%“Œ‹ž ReportLab Generated PDF document (opensource)
+1 0 obj
+<<
+/F1 2 0 R /F2 3 0 R
+>>
+endobj
+2 0 obj
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
+endobj
+3 0 obj
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
+endobj
+4 0 obj
+<<
+/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+5 0 obj
+<<
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (P. Kirichenko, Pavel Izmailov, A. Wilson) /CreationDate (D:20251211162055+09'00') /Creator (anonymous) /Keywords () /ModDate (D:20251211162055+09'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (unspecified) /Title (Why Normalizing Flows Fail to Detect Out-of-Distribution Data) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 914
+>>
+stream
+Gat%`:N%.+&B4,6'^qDgJH>lCkE_E'W`kZY7>`SV@_B&61gYN?HQbfUn/ZjI6E5"'O:Z3oRGY[O]L*+g1X+af#!OX.nRdU9#`B>5EIWqdGC3O5jn4b;jRm6eicT[Z.kqq"Hn=Gq*8ab#r,BANL7d,$E+@ZMi'st;FI5oN*AMJBc]u0]LZj$:7WoP'("EU+^TmS'dT'rb\a/JXSr$$brZ^I-0H,lSpk-m4<@SigE&P4fL$LWtcHG6b+5b_WY/if:;r"B1)16k4L!?_qES\YUS)EWSKhZE](RM'TR?$hkK:af[]HbrJhK4(3nZJ36VUG!!Vji^Yj.0dR9@q9dm)sR%4J0sf:JcjphuN.Kc,u]$*o8L'&5ar`YpC6Laeh+-)^<h+s2Lum)l5[1`S:\ZRq/2?cm(1QTce*S,"l5V?P@0UO9p`.MK!,PMpV=?F--61MfKVc`%NVmLC-\3)j61sHVh.qGJl>l("?Zpd;[.f2@u]r<[hS,Y`>i`+=tmZ`@?kH6K"+<W-D=)LZ&In>WGk2Z:YZdSmt)?Gf<N:\g)c1P9@&.,]"a`p/SQ=:kS?UW.9W8(fI,Kc6jpV*3i3@bgnhEgD!U[Ch3T\P;V^PB%p^`(0;H(Pg!n*4ddqa=gdSsl[pmTbHhVp[9?E\\t0lg)ge8URZ_2>,eRF%9dP!/,s_`p#RtK#=XSW,-+fFL;+*%%XU,[tI]/G-M0lcr9QK!D>,&mq2AqZm.PD*&;M\W#XmDj,D.D!(UUK4eMkH?SP#]SY3kO3;q'*I`48fhk<]1;jLtOs.4cD5b@_F^*)XC?lCqNuMUAoHqDuEuh;FE[M8NfRN:5RkjC%k;%V;'G/.4Xb'bi+I<R<4!T)=<\?Q\sh3;`nS".X?/&,p^gE(b*S"Z:o1;@<i6mf*"Tn!PJ9abQ~>endstream
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000514 00000 n 
+0000000582 00000 n 
+0000000927 00000 n 
+0000000986 00000 n 
+trailer
+<<
+/ID 
+[<9b1428d536a3c255bee9a9ca4ef9b210><9b1428d536a3c255bee9a9ca4ef9b210>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
+>>
+startxref
+1990
+%%EOF

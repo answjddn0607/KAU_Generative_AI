@@ -1,0 +1,74 @@
+%PDF-1.3
+%“Œ‹ž ReportLab Generated PDF document (opensource)
+1 0 obj
+<<
+/F1 2 0 R /F2 3 0 R
+>>
+endobj
+2 0 obj
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
+endobj
+3 0 obj
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
+endobj
+4 0 obj
+<<
+/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+5 0 obj
+<<
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (Shaden Smith, M. Patwary, Brandon Norick, P. LeGresley, Samyam Rajbhandari) /CreationDate (D:20251211162039+09'00') /Creator (anonymous) /Keywords () /ModDate (D:20251211162039+09'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (unspecified) /Title (Using DeepSpeed and Megatron to Train Megatron-Turing NLG 530B, A Large-Scale Generative Language Model) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 1307
+>>
+stream
+Gat%!>Ar7S'RoMS303H7H+kZjS$T1^!%/%aDoI7@:stKFKHaEZZKksaINQ\MEOr*a@).jplL;FUE(hMS`ppfWLb:XYl_cIs-a]jd4<)RZZ_H>9n)F*F,B8)c4F\4j5F%Usk\Q"B)LDF]PBol'bjDuQ/kP8iDL!bF24D1ON>5>58$Yj%_tq!q29i%ob5j1Zd,om;^V$hhA/9Ak$+o;8>mSDkc'kd(ElYO"HJ=9.e#b'%]rhunN?\ADS*1Y)Mcfjp(A8tI7["/W6bc3RdRLj0F?Z.&@+kA0=M1eP;6m'A,CM_JgEGA\^DHStTM#[0@!ZIe/05%<5GT$$>BYlY],&XW2"ZQJaD7jj<hA7!&]iXm)O`<+nO_.)./t6pS._3M,CsFo]G6/#^\k"oo6\YE(^/m-;-K6mSSa?r;U>1t6!m-9cm4KP1:26:MDJ1B^?/*kO,9S5%*=Ofp'sJbk=>uA;0=G?C\;.a(?)XO'^T;'9%*d,U\mBO'WhmULf8$])N5Q6HJoncmA-EDCea&,is/QR5!Hq*<Zm_(:<.:`W3uQWYoD+;(SYt8JHPWK*)dFT8kZ<;!j4h6,q$G`V($UfV\Xi/!FQC@>1(Jj+TRhCFttDYQJ4H9fiH*N65PS6Cl&SjJ=NTdI-Lkl5JN#)!\'hOaI9:O=e(Q\g9;>Qc:BcKC^JTK['rO9LU;/c!qP"n+%QZ`0N*8W$G\dcm.ZI7ho`g)J?'d?g&)-?m]W+\S)o1o9J&jmlBU^iKJ&r)e0gWHD@)U"^nm"lRD8tRaTZh>;BAhcS\UkrZUeNmCGPPDrTtrLgQrGdLu#orj\dNIG%u^G%=>OFk9cje%V'H-nu8DgbfUXUOc._S(!'ca+Plu>Ra4m/&WAk'73Y;f]o"m$`Cd^rY]FYRUWiEs>p'RuUK@gnA<)NG*]p/ZroPHVUj51tBhJ%K5FtVT8p8<ODKYHiFS99?@;O\,8_>ppPeme8k<1ZFP7.KqN3!,G*:-"e!!PZLI-:em:<CL>Q:i*i',1_m/=j?7`'bo+oLWe2G=[+XK.ZNDDKmO.QU%Bt#L"jd)jIUH%osp$fWZII-tV/oNpSIT$'Dp`I8C@2n=eD&[p%qB_\%!i'X8g0%QYfcTeCa@>mpZhpY7qQ\=nR42Kc2%ABul+Z46Y4df7tW'Q1);c:R=*EJOCajkd--@=g,s7bG`a*i.1*UdNmo7/kZRT0sXl_`:APrqp5EU_c?p)""HL]-PrKLPonJ/QJ@$\u0rC=IHT(0#Q8m">UcHp1)`]T.W*JZDo#!,";Ba4"Enrj"9nFdm]q->j:(ZgGe$e~>endstream
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000514 00000 n 
+0000000582 00000 n 
+0000001003 00000 n 
+0000001062 00000 n 
+trailer
+<<
+/ID 
+[<850cb51ed9ec31b2e0bf606c57d7b5d5><850cb51ed9ec31b2e0bf606c57d7b5d5>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
+>>
+startxref
+2460
+%%EOF

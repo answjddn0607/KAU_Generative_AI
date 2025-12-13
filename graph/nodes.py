@@ -5,10 +5,10 @@ from openai import OpenAI
 import os
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, ToolMessage
 
+
 def agent_node(state: AgentState) -> AgentState:
     """Agent 노드"""
     
-    # OpenAI 클라이언트 초기화
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     
     from tools.tool_registry import ToolRegistry, register_all_tools
@@ -19,7 +19,6 @@ def agent_node(state: AgentState) -> AgentState:
     tools = registry.list_openai_tools()
     messages = list(state["messages"])
     
-    # 메시지를 OpenAI 포맷으로 변환
     formatted_messages = []
     has_system = any(isinstance(m, SystemMessage) for m in messages)
     
@@ -32,7 +31,6 @@ def agent_node(state: AgentState) -> AgentState:
         elif isinstance(msg, AIMessage):
             msg_dict = {"role": "assistant", "content": msg.content or ""}
             if hasattr(msg, 'tool_calls') and msg.tool_calls:
-                # LangGraph tool_calls -> OpenAI 포맷으로 변환
                 openai_tool_calls = [
                     {
                         "id": tc.get("id"),
@@ -59,13 +57,13 @@ def agent_node(state: AgentState) -> AgentState:
         model="gpt-4o-mini",
         messages=formatted_messages,
         tools=tools if tools else None,
-        tool_choice="auto"
+        tool_choice="auto",
+        parallel_tool_calls=False
     )
     
     msg = response.choices[0].message
     
     if msg.tool_calls:
-        # LangGraph 형식으로 tool_calls 변환
         tool_calls_for_langchain = [
             {
                 "name": tc.function.name,
@@ -103,7 +101,6 @@ def tools_node(state: AgentState) -> AgentState:
 
     tool_calls = json.loads(state["tool_result"])
 
-    # tool 단일일 때
     if not isinstance(tool_calls, list):
         tool_calls = [tool_calls]
     

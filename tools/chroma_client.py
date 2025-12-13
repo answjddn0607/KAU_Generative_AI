@@ -1,5 +1,6 @@
 import chromadb
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
+from pathlib import Path
 
 # 싱글톤 패턴으로 클라이언트 관리
 _client = None
@@ -11,7 +12,10 @@ def get_chroma_client() -> chromadb.PersistentClient:
     """
     global _client
     if _client is None:
-        _client = chromadb.PersistentClient(path="./chroma_db")
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        DB_PATH = BASE_DIR / "chroma_db"
+        
+        _client = chromadb.PersistentClient(path=str(DB_PATH))
     return _client
 
 
@@ -45,7 +49,7 @@ def get_rag_collection():
     """
     client = get_chroma_client()
     return client.get_or_create_collection(
-        name="paper_abstracts",
+        name="papers",
         metadata={"description": "Paper abstracts for RAG"},
         embedding_function=get_embedding_function()
     )
