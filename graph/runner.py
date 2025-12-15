@@ -41,37 +41,44 @@ def run_with_stream(user_input: str, session_id: str = "default"):
     
     for event in graph.stream(initial_state, config, stream_mode="updates"):
         for node_name, node_output in event.items():
-            # interrupt 처리
-            if node_name == "__interrupt__":
-                print("[INTERRUPT] 감지!")
-                snap = graph.get_state(config)
-                if snap.next and "pa_ask_user" in snap.next:
-                    query = snap.values.get("query", "")
-                    answer = f"'{query}' 관련 논문을 찾지 못했습니다. 정확한 논문 제목을 입력해주세요."
-                    yield logs + f"\n\n⏸️ **입력 대기:**\n\n{answer}"
-                    return
-                continue
             
-            if not isinstance(node_output, dict):
-                continue
-            
-            iteration = node_output.get("iteration", 0)
-            print(f"[{node_name.upper()}] Iteration {iteration}")
-            
+            # 1. 에이전트가 말하거나 도구를 호출했을 때
             if node_name == "agent":
                 messages = node_output.get("messages", [])
                 if messages:
                     last_msg = messages[-1]
+                    
+                    # 도구 호출이 있는 경우에만
                     if hasattr(last_msg, 'tool_calls') and last_msg.tool_calls:
-                        tool_calls = last_msg.tool_calls
-                        print(f"  🔧 Tool Call ({len(tool_calls)}개):")
-                        logs += f"🛠️ **Tool Call** ({len(tool_calls)}개):\n"
-                        for tc in tool_calls:
-                            print(f"    - {tc['name']}")
-                            logs += f"  - `{tc['name']}`\n"
+                        
+                        logs += f"\n\n🛠️ **도구 호출** ({len(last_msg.tool_calls)}개):\n"
+                        for tc in last_msg.tool_calls:
+                            func_name = tc['name']
+                            func_args = tc['args']
+                            logs += f"- ⚙️ **Running:** `{func_name}`\n"
+                            logs += f"  - 📥 **Input:** `{str(func_args)}`\n"
+                        logs += "\n"
                         yield logs
-                    elif hasattr(last_msg, 'content') and last_msg.content:
-                        print(f"  💬 Response: {last_msg.content[:100]}...")
+                    
+                    # 최종 답변 생성
+                    else:
+                        pass
+
+            # 2. Tools 실행을 마치고 결과를 뱉었을 때
+            elif node_name == "tools": 
+                messages = node_output.get("messages", [])
+                if messages:
+                    last_msg = messages[-1]
+                    result_preview = last_msg.content[:200]
+                    
+                    logs += f"\n\n✅ **도구 실행 완료!**\n"
+                    logs += f"> 📤 **Output:** {result_preview}...\n"
+                    yield logs
+
+            # 3. 그 외 커스텀 노드 
+            else:
+                logs += f"\n\n🔄 **작업 중:** `{node_name}` 단계 수행 중...\n"
+                yield logs
     
     final_state = graph.get_state(config)
     final_msg = final_state.values["messages"][-1]
@@ -79,4 +86,5 @@ def run_with_stream(user_input: str, session_id: str = "default"):
 
     extract_and_save_memory(user_input, answer)
     
-    yield logs + f"\n\n✅ **최종 답변:**\n\n{answer}"
+    logs += "\n\n✅ **작업이 완료되었습니다.**"
+    yield logs + f"\n\n**최종 답변:**\n\n{answer}"

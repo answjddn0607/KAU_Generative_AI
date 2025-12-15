@@ -2,17 +2,17 @@ from fastapi import FastAPI
 import gradio as gr
 import uvicorn
 import uuid
+import time 
 from graph.runner import run_with_stream
 
 # FastAPI 앱 생성
 app = FastAPI()
 
-with gr.Blocks(title="Transpoter", fill_height=True) as demo:
+with gr.Blocks(title="Transporter", fill_height=True) as demo:
     
     # 사이드바: 로그창
     with gr.Sidebar(label="Agent Status"):
-        gr.Markdown("### 실시간 로그")
-        log_view = gr.Markdown("대기 중...")
+        log_view = gr.Markdown("")
 
     gr.Markdown(
         """
@@ -22,43 +22,57 @@ with gr.Blocks(title="Transpoter", fill_height=True) as demo:
     )
     
     chatbot = gr.Chatbot(label="대화창", height=450)
-    
     msg = gr.Textbox(label="질문 입력")
-    
     session_id_state = gr.State(lambda: str(uuid.uuid4()))
+    log_history_state = gr.State(value="") 
 
-    def respond(user_message, history, session_id):
+    def respond(user_message, history, session_id, log_accumulated):
         if not user_message:
-            return "", history, "내용을 입력해주세요."
+            return "", history, "내용을 입력해주세요.", log_accumulated
 
         if history is None:
             history = []
         
-        # 사용자 질문 추가
         history.append({"role": "user", "content": user_message})
+
+        # 답변 출력 대기
+        history.append({"role": "assistant", "content": "..."}) 
         
-        # AI 답변 자리 만들기 (빈 내용으로 미리 추가)
-        history.append({"role": "assistant", "content": "..."})
-        
-        yield "", history, "에이전트가 작업을 시작했습니다..."
+        prefix = ""
+        if log_accumulated:
+            prefix = log_accumulated + "\n\n---\n\n"
+            
+        current_header = f"### 🔎 질문: {user_message}\n"
+
+        yield "", history, prefix + current_header + "에이전트가 작업을 시작했습니다...", log_accumulated
         
         for output in run_with_stream(user_message, session_id=session_id):
             if "**최종 답변:**" in output:
                 parts = output.split("**최종 답변:**")
                 logs = parts[0].strip()
-                answer = parts[1].strip()
+                full_answer = parts[1].strip()
                 
-                # 마지막 AI 답변 내용을 실제 정답으로 업데이트
-                history[-1]['content'] = answer
+                new_log_entry = prefix + current_header + logs
                 
-                yield "", history, logs
+                # 답변을 출력하기 직전에 "..."을 지움
+                history[-1]['content'] = ""
+                
+                for char in full_answer:
+                    history[-1]['content'] += char
+                    yield "", history, new_log_entry, new_log_entry
+                    time.sleep(0.005) 
+
             else:
-                # [진행 중] 로그창만 업데이트
-                yield "", history, output
+                # 로그만 업데이트 (화면엔 여전히 "..." 표시됨)
+                current_view = prefix + current_header + output
+                yield "", history, current_view, log_accumulated
 
-    msg.submit(respond, [msg, chatbot, session_id_state], [msg, chatbot, log_view])
+    msg.submit(
+        respond, 
+        [msg, chatbot, session_id_state, log_history_state], 
+        [msg, chatbot, log_view, log_history_state]
+    )
 
-# Mount
 app = gr.mount_gradio_app(app, demo, path="/")
 
 if __name__ == "__main__":

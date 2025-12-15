@@ -267,6 +267,8 @@ class RAGSearchInput(BaseModel):
 
 def rag_search_handler(args: RAGSearchInput) -> Dict[str, Any]:
     
+    print(f"[RAG Search] 입력 쿼리: '{args.query}'") 
+    
     collection = get_rag_collection()
     
     # 초기 검색: top_k의 2배 가져오기
@@ -345,10 +347,13 @@ class SemanticScholarSearchInput(BaseModel):
 
 
 def semantic_scholar_search_handler(args: SemanticScholarSearchInput) -> Dict[str, Any]:
+
+    print(f"[Sematic] 입력 쿼리: '{args.query}'") 
+
     try:
         params = {
             "query": args.query,
-            "limit": args.limit,
+            "limit": args.limit * 2,  
             "fields": "paperId,title,year,authors,abstract,citationCount,url",
         }
 
@@ -371,22 +376,56 @@ def semantic_scholar_search_handler(args: SemanticScholarSearchInput) -> Dict[st
         response.raise_for_status()
 
         data = response.json().get("data", [])
+        
+        if not data:
+            return {
+                "query": args.query,
+                "count": 0,
+                "results": [],
+                "reranked": False
+            }
+        
+        # 리랭킹을 위한 형식 변환
+        papers = []
+        for p in data:
+            papers.append({
+                "text": f"{p.get('title', '')} {p.get('abstract', '')}",
+                "paper_id": p.get("paperId"),
+                "title": p.get("title"),
+                "year": p.get("year"),
+                "authors": [a.get("name") for a in p.get("authors", [])[:5]],
+                "abstract": p.get("abstract"),
+                "citation_count": p.get("citationCount", 0),
+                "url": p.get("url")
+            })
+
+        # print(f"[Semantic Scholar] 리랭킹 전: {len(papers)}개")
+        
+        # Cross-Encoder 리랭킹
+        reranked_papers = rerank_results(args.query, papers, top_k=args.limit)
+        
+        # print(f"[Semantic Scholar] 리랭킹 후: {len(reranked_papers)}개")
+    
+        # 유사도 임계값 체크 (0.5 미만이면 관련성 낮음)
+        if not reranked_papers or reranked_papers[0].get("relevance_score", 0) < 0.5:
+            print(f"[Semantic Scholar] 임계값 미달로 필터링됨")
+            return {
+                "query": args.query,
+                "count": 0,
+                "results": [],
+                "reranked": True,
+                "reason": "신뢰도 낮음"
+            }
+        
+        # text 필드 제거
+        for paper in reranked_papers:
+            paper.pop('text', None)
 
         return {
             "query": args.query,
-            "count": len(data),
-            "results": [
-                {
-                    "paper_id": p.get("paperId"),
-                    "title": p.get("title"),
-                    "year": p.get("year"),
-                    "authors": [a.get("name") for a in p.get("authors", [])[:5]],
-                    "abstract": p.get("abstract"),
-                    "citation_count": p.get("citationCount", 0),
-                    "url": p.get("url")
-                }
-                for p in data
-            ]
+            "count": len(reranked_papers),
+            "results": reranked_papers,
+            "reranked": True
         }
 
     except requests.exceptions.RequestException as e:

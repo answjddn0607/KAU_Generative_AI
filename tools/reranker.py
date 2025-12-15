@@ -10,9 +10,7 @@ def get_reranker() -> CrossEncoder:
     """
     global _reranker
     if _reranker is None:
-        print("[Reranker] Cross-Encoder 모델 로딩 중...")
         _reranker = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-12-v2')
-        print("[Reranker] 모델 로딩 완료")
     return _reranker
 
 
