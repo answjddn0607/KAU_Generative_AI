@@ -2,6 +2,9 @@
 
 논문 검색 및 추천을 위한 AI 에이전트 시스템
 
+보고서 파일 : [생성형 AI 응용 Final Project 보고서.docx](https://github.com/user-attachments/files/24160066/AI.Final.Project.docx)  
+발표자료 : [생성형 AI 응용 발표자료.pdf](https://github.com/user-attachments/files/24168027/AI.pdf)
+
 ## 📁 프로젝트 구조
 
 ```

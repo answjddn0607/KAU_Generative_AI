@@ -4,6 +4,7 @@ import json
 from openai import OpenAI
 import os
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, ToolMessage
+from datetime import datetime
 
 
 def agent_node(state: AgentState) -> AgentState:
@@ -23,7 +24,18 @@ def agent_node(state: AgentState) -> AgentState:
     has_system = any(isinstance(m, SystemMessage) for m in messages)
     
     if not has_system:
-        formatted_messages.append({"role": "system", "content": SYSTEM_PROMPT})
+        # 현재 날짜를 system prompt에 동적 삽입
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        current_year = datetime.now().year
+        
+        enhanced_prompt = f"""{SYSTEM_PROMPT}
+
+# 현재 시간 정보
+- 오늘 날짜: {current_date}
+- 현재 연도: {current_year}
+- 현재 연도와 유저가 원하는 연도가 차이가 많이 나는 미래라면(1년 이상), 올바르지 않은 질문이라고 출력할 것"""
+        
+        formatted_messages.append({"role": "system", "content": enhanced_prompt})
     
     for msg in messages:
         if isinstance(msg, HumanMessage):
